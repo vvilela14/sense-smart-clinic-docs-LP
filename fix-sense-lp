@@ -1,0 +1,33 @@
+$ cat /Users/kayron/Documents/sense-lp/sense-fixes.css
+
+/* ─── SENSE LP — FIXES (v2) ─────────────────────────────────────
+   Aplicar APÓS o <style> principal, ou linkar antes de </head>
+   ──────────────────────────────────────────────────────────────── */
+
+/* #1 — Imagem a 100% de altura (era 92%) */
+.hero-photo img {
+  max-height: 100%;
+}
+
+/* #2 — Imagem ancora no FUNDO da seção hero (remove top: 0) */
+.hero-photo {
+  top: auto;        /* cancela o top: 0 do CSS original */
+  bottom: 0;
+  align-items: flex-end;
+}
+
+/* #3 — Remove gradiente/sombra coral do overlay;
+         mantém apenas o fade branco da esquerda */
+.hero-overlay {
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.85) 30%,
+    rgba(255, 255, 255, 0) 55%
+  );
+}
+
+/* #3b — Apaga o blob coral (equivalente a remover o elemento do HTML) */
+.hero-accent-blob {
+  display: none;
+}

@@ -109,7 +109,7 @@ nav.scrolled {
 /* ─── HERO ──────────────────────────────────────────────── */
 .hero {
   min-height: 100vh;
-  background: #ffffff url("hero-bg.png") center right / cover no-repeat;
+  background: #ffffff;
   position: relative;
   overflow: hidden;
   display: flex; align-items: center;
@@ -1247,14 +1247,6 @@ footer {
   background: rgba(224,98,83,0.2);
   color: var(--tomato);
 }
-.sensepass-brand-text {
-  display: block;
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--tomato);
-  letter-spacing: 0.02em;
-  margin-bottom: 10px;
-}
 .sensepass-plan-name {
   font-size: 28px;
   font-weight: 800;
@@ -1366,7 +1358,8 @@ footer {
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.92) 28%, rgba(255,255,255,0.4) 48%, rgba(255,255,255,0) 60%);
+    linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.85) 30%, rgba(255,255,255,0) 55%),
+    linear-gradient(115deg, rgba(224,98,83,0) 45%, rgba(224,98,83,0.45) 78%, rgba(224,98,83,0.7) 100%);
 }
 
 /* ─── AGENDA MOCKUP ─────────────────────────────────────── */
@@ -1426,22 +1419,29 @@ footer {
 
 .hero-photo {
   position: absolute;
+  top: 0;
   right: 0;
   bottom: 0;
-  width: 40%;
-  max-height: 500px
-  object-fit: contain;
+  width: 48%;
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
   z-index: 0;
   pointer-events: none;
 }
+.hero-photo img {
+  width: 100%;
+  max-width: 100%;
+  max-height: 92%;
+  height: auto;
+  object-fit: contain;
+}
 @media (max-width: 900px) {
   .hero-photo { display: none; }
-
 }
-<link rel="stylesheet" href="sense-fixes.css" />
+
+
+
 </style>
 </head>
 <body>
@@ -1520,12 +1520,6 @@ footer {
         </div>
       </div>
 
-    </div>
-  </div>
-<div class="hero-card-frame"></div>
-
-
-  
     </div>
   </div>
 </section>
@@ -2023,7 +2017,6 @@ footer {
       <!-- On Demand -->
       <div class="sensepass-card">
         <div class="sensepass-card-top">
-          <span class="sensepass-brand-text">SensePass</span>
           <span class="sensepass-tag">On Demand</span>
           <h3 class="sensepass-plan-name">Flexibilidade<br/>total</h3>
           <p class="sensepass-profile-desc">Para quem atende com frequência variável e quer liberdade de agenda sem compromisso fixo.</p>
@@ -2046,7 +2039,6 @@ footer {
       <!-- Pro -->
       <div class="sensepass-card sensepass-card--highlight">
         <div class="sensepass-card-top">
-          <span class="sensepass-brand-text">SensePass</span>
           <span class="sensepass-tag sensepass-tag--coral">Pro</span>
           <h3 class="sensepass-plan-name">Consultório<br/>sem dor de cabeça</h3>
           <p class="sensepass-profile-desc">Para quem quer presença constante — modelo híbrido ou dias fixos — com toda a estrutura pronta.</p>
@@ -2322,7 +2314,3 @@ document.querySelector('.btn-cta-submit').addEventListener('click', () => {
 </script>
 </body>
 </html>
-
-#1 Reduza para 100%
-#2 Jogue a imagem para o fundo da página
-#3 Retire o gradiente/sombra coral

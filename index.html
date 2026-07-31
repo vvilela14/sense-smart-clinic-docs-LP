@@ -2461,9 +2461,11 @@ footer {
       if(itensMes.length) linhas.push({ secao: sec.titulo, itens: itensMes });
     });
 
-    var pacote = null;
-    for(var i=0;i<SENSEPASS.length;i++){ if(SENSEPASS[i].h >= hrsMes){ pacote = SENSEPASS[i]; break; } }
-    if(!pacote) pacote = SENSEPASS[SENSEPASS.length-1];
+    /* escolhe o pacote SensePass mais próximo das horas mensais */
+    var pacote = SENSEPASS[0];
+    for(var i=1;i<SENSEPASS.length;i++){
+      if(Math.abs(SENSEPASS[i].h - hrsMes) < Math.abs(pacote.h - hrsMes)) pacote = SENSEPASS[i];
+    }
     var sensePreco = temAvancado ? pacote.completo : pacote.basico;
 
     /* anual: 12 meses de custo recorrente + investimento inicial no 1º ano */

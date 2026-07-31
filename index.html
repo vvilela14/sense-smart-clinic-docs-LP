@@ -25,7 +25,7 @@
   --claret:      #750D37;
   --indigo:      #0D5074;
   --gunmetal:    #062533;
-  --seashell:    #FBF3EC;
+  --seashell:    #f4f6f8;
   --white:       #F8FCFF;
   --fairy:       #FCC5DF;
   --dogwood:     #D81A71;
@@ -1913,6 +1913,8 @@ footer {
   border-left:2px solid rgba(224,98,83,.2); }
 .calc-subitens.calc-show { display:block; animation:calcFade .2s ease; }
 .calc-subitens .calc-check { font-size:13px; padding:10px 14px; background:rgba(255,255,255,.7); }
+.calc-periodo { font-size:11px; font-weight:600; opacity:.5; margin-left:auto; padding-left:10px; white-space:nowrap; }
+@media (max-width:560px){ .calc-periodo { display:none; } }
 
 /* valores mensal x anual */
 .calc-card-annual { font-size:13px; opacity:.6; margin:-12px 0 16px; }
@@ -2108,6 +2110,10 @@ footer {
       <div class="calc-step" data-step="3">
         <p class="calc-step-title" id="calcInfraTitulo">Infraestrutura</p>
         <p class="calc-step-desc" id="calcInfraDesc">O que faz parte da estrutura física do seu consultório?</p>
+        <div id="calcAreaCampo" style="display:none">
+          <label class="calc-label">Área do consultório <span class="calc-hint">· em m², usada na taxa de arquitetura</span></label>
+          <input class="calc-input calc-num" type="number" id="calcArea" value="40" min="1" max="2000"/>
+        </div>
         <div id="calcListInfra"></div>
       </div>
 
@@ -2188,7 +2194,11 @@ footer {
     { titulo:"Infraestrutura", lista:"calcListInfra", itens:[
       {id:"aluguel", nome:"Aluguel", valor:2500, obrig:true},
       {id:"iptu", nome:"IPTU", valor:190, obrig:true},
-      {id:"alvara", nome:"Alvará e documentação", valor:190, obrig:true},
+      {id:"alvara", nome:"Alvará e documentação", valor:190, obrig:true, soExistente:true},
+      /* taxas de abertura — só no cenário "quero abrir" */
+      {id:"tx_arq", nome:"Taxa de arquitetura", obrig:true, soNovo:true, unico:true, porArea:true},
+      {id:"tx_visa", nome:"Taxa de vigilância sanitária", valor:580, obrig:true, soNovo:true, unico:true},
+      {id:"tx_municipal", nome:"Taxa municipal de funcionamento", valorAno:580, obrig:true, soNovo:true, periodo:"por ano"},
       {id:"estac", nome:"Estacionamento", valor:100},
       /* mobília: só no cenário "quero abrir" — custo único, não mensal */
       {id:"mob_cons", nome:"Mobília consultório básico", soNovo:true, unico:true, subitens:[
@@ -2214,7 +2224,12 @@ footer {
       {id:"limpeza", nome:"Limpeza e material", valor:0, limpeza:true},
       {id:"material", nome:"Material de consultório (avental, gaze, luvas…)", valor:190},
       {id:"lixo", nome:"Coleta de lixo intoxicante", valor:180},
-      {id:"manut", nome:"Manutenção", valor:90}
+      {id:"manut", nome:"Manutenção", valor:90},
+      /* manutenções periódicas — valor anual diluído no mês */
+      {id:"dedetizacao", nome:"Dedetização", valorAno:600, periodo:"R$300 a cada 6 meses"},
+      {id:"caixa_agua", nome:"Limpeza da caixa d'água", valorAno:500, periodo:"1x ao ano"},
+      {id:"filtro", nome:"Limpeza de filtro", valorAno:600, periodo:"R$300 a cada 6 meses"},
+      {id:"limpeza_ar", nome:"Limpeza de ar-condicionado", valorAno:360, porAr:true, periodo:"R$180 por aparelho, a cada 6 meses"}
     ]},
     { titulo:"Serviços operacionais e administrativos", lista:"calcListOper", itens:[
       {id:"secretaria", nome:"Secretária", valor:2240, avancado:true},
@@ -2284,10 +2299,15 @@ footer {
         return;
       }
 
+      if(it.soNovo)      div.setAttribute("data-so-novo", "1");
+      if(it.soExistente) div.setAttribute("data-so-existente", "1");
+      if(it.periodo)     div.innerHTML += '<span class="calc-periodo">' + it.periodo + '</span>';
+
       if(!it.obrig){
         div.addEventListener("click", function(){
           div.classList.toggle("calc-on");
           if(it.limpeza) $("calcLimpezaDias").classList.toggle("calc-show", div.classList.contains("calc-on"));
+          if(it.porAr)   $("calcQtdAr").classList.toggle("calc-show", div.classList.contains("calc-on"));
         });
       }
       el.appendChild(div);
@@ -2297,6 +2317,13 @@ footer {
         campo.innerHTML = '<label class="calc-label" style="font-size:14px">Quantos dias por semana?</label>'
           + '<input type="number" id="calcDiasLimpeza" value="2" min="1" max="7"/>';
         el.appendChild(campo);
+      }
+      if(it.porAr){
+        var campoAr = document.createElement("div");
+        campoAr.className = "calc-sub-field"; campoAr.id = "calcQtdAr";
+        campoAr.innerHTML = '<label class="calc-label" style="font-size:14px">Quantos aparelhos?</label>'
+          + '<input type="number" id="calcArs" value="1" min="1" max="10"/>';
+        el.appendChild(campoAr);
       }
     });
   });
@@ -2318,12 +2345,21 @@ footer {
         g.querySelector(".calc-subitens").classList.remove("calc-show");
       }
     });
+    /* taxas de abertura x alvará recorrente */
+    Array.prototype.forEach.call(document.querySelectorAll("[data-so-novo]"), function(e){
+      e.style.display = novo ? "" : "none";
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-so-existente]"), function(e){
+      e.style.display = novo ? "none" : "";
+    });
+    $("calcAreaCampo").style.display = novo ? "block" : "none";
     Array.prototype.forEach.call(document.querySelectorAll(".calc-pill"), function(p){
       if(+p.getAttribute("data-p") === 3) p.textContent = novo ? "4. Infraestrutura" : "4. Infraestrutura";
     });
   }
   $("calcCenNovo").addEventListener("click", function(){ setCenario(true); });
   $("calcCenTem").addEventListener("click", function(){ setCenario(false); });
+  setCenario(false);   /* estado inicial: já tem consultório */
 
   /* autocomplete */
   function filtraEspec(){
@@ -2413,6 +2449,17 @@ footer {
       var dias = +($("calcDiasLimpeza") ? $("calcDiasLimpeza").value : 2);
       return dias * DIAS_MES_POR_SEMANA * LIMPEZA_DIA;
     }
+    /* taxa de arquitetura: R$1.000 por 582m², mínimo R$200 */
+    if(it.porArea){
+      var area = +($("calcArea") ? $("calcArea").value : 40);
+      return Math.max(200, area * (1000 / 582));
+    }
+    /* periódicos: valor do ano diluído em 12 meses */
+    if(it.valorAno){
+      var ano = it.valorAno;
+      if(it.porAr) ano *= +($("calcArs") ? $("calcArs").value : 1);
+      return ano / 12;
+    }
     return it.valor;
   }
 
@@ -2429,7 +2476,7 @@ footer {
       return el && el.classList.contains("calc-on");
     }
 
-    var total = 0, investimento = 0, temAvancado = false, linhas = [], linhasInvest = [];
+    var total = 0, investimento = 0, temAvancado = false, linhas = [], linhasInvest = [], taxasAbertura = [];
     SECOES.forEach(function(sec){
       var itensMes = [];
       sec.itens.forEach(function(it){
@@ -2448,17 +2495,32 @@ footer {
           return;
         }
 
+        /* itens ocultos pelo cenário não entram na conta */
+        if(it.soNovo && !novoConsultorio) return;
+        if(it.soExistente && novoConsultorio) return;
+
         var v = itemValor(it) / pessoas;
+
+        /* taxas pagas uma única vez entram no investimento, não no mês */
+        if(it.unico){
+          investimento += v;
+          taxasAbertura.push({ nome: it.nome, v: v });
+          return;
+        }
+
         total += v;
         if(it.avancado) temAvancado = true;
         var nomeSense = it.nome;
         if(it.limpeza) nomeSense += " (" + ($("calcDiasLimpeza") ? $("calcDiasLimpeza").value : 2) + "x/semana)";
+        if(it.porAr)   nomeSense += " (" + ($("calcArs") ? $("calcArs").value : 1) + " aparelho(s))";
         var nome = nomeSense;
-        if(it.nota) nome += " · " + it.nota;
+        if(it.periodo) nome += " · " + it.periodo;
+        if(it.nota)    nome += " · " + it.nota;
         itensMes.push({ nome: nome, nomeSense: nomeSense, v: v });
       });
       if(itensMes.length) linhas.push({ secao: sec.titulo, itens: itensMes });
     });
+    if(taxasAbertura.length) linhasInvest.unshift({ secao: "Taxas de abertura", itens: taxasAbertura });
 
     /* escolhe o pacote SensePass mais próximo das horas mensais */
     var pacote = SENSEPASS[0];
@@ -2545,6 +2607,8 @@ footer {
         itens_selecionados: itensSel,
         itens_detalhados: itensDet,
         cenario: novoConsultorio ? "novo" : "existente",
+        area_m2: novoConsultorio ? (+($("calcArea") ? $("calcArea").value : 0)) : null,
+        qtd_ar_condicionado: $("calcArs") ? +$("calcArs").value : null,
         investimento_inicial: Math.round(investimento),
         investimento_detalhado: investDet,
         custo_tradicional_anual: Math.round(tradAnual),

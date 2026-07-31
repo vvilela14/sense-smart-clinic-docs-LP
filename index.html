@@ -1891,6 +1891,41 @@ footer {
 .calc-wizard { display:none; background:#F4F6F8; border-radius:24px; padding:40px 36px;
   max-width:620px; margin:0 auto; text-align:left; }
 .calc-wizard.calc-show { display:block; }
+/* escolha de cenário */
+.calc-cenarios { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:560px){ .calc-cenarios { grid-template-columns:1fr; } }
+.calc-cenario {
+  text-align:left; padding:22px 20px; border-radius:16px; cursor:pointer;
+  background:var(--white); border:2px solid rgba(6,37,51,.12);
+  font-family:inherit; color:var(--gunmetal); transition:all .18s;
+  display:flex; flex-direction:column; gap:6px;
+}
+.calc-cenario:hover { border-color:rgba(224,98,83,.45); }
+.calc-cenario.calc-on { border-color:var(--tomato); background:rgba(224,98,83,.06); }
+.calc-cenario-ico { width:34px; height:34px; border-radius:10px; background:rgba(224,98,83,.12);
+  display:flex; align-items:center; justify-content:center; color:var(--tomato); margin-bottom:4px; }
+.calc-cenario.calc-on .calc-cenario-ico { background:var(--tomato); color:#fff; }
+.calc-cenario-t { font-size:15px; font-weight:800; letter-spacing:-.3px; }
+.calc-cenario-d { font-size:13px; line-height:1.5; opacity:.6; }
+
+/* grupos de mobília */
+.calc-group { margin-bottom:8px; }
+.calc-subitens { display:none; margin:2px 0 10px 16px; padding-left:16px;
+  border-left:2px solid rgba(224,98,83,.2); }
+.calc-subitens.calc-show { display:block; animation:calcFade .2s ease; }
+.calc-subitens .calc-check { font-size:13px; padding:10px 14px; background:rgba(255,255,255,.7); }
+
+/* valores mensal x anual */
+.calc-card-annual { font-size:13px; opacity:.6; margin:-12px 0 16px; }
+.calc-card-sense .calc-card-annual { color:rgba(255,255,255,.6); opacity:1; }
+.calc-invest {
+  margin-top:14px; padding:13px 15px; border-radius:12px;
+  background:rgba(6,37,51,.05); font-size:13px; line-height:1.5;
+}
+.calc-card-sense .calc-invest { background:rgba(255,255,255,.07); }
+.calc-invest b { font-weight:800; }
+.calc-savings-sub { font-size:14px; font-weight:600; opacity:.85; margin-top:2px; }
+
 .calc-step { display:none; }
 .calc-step.calc-show { display:block; animation:calcFade .25s ease; }
 @keyframes calcFade { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
@@ -2035,6 +2070,23 @@ footer {
       </div>
 
       <div class="calc-step" data-step="1">
+        <p class="calc-step-title">Qual é o seu momento?</p>
+        <p class="calc-step-desc">Isso muda o que entra na conta.</p>
+        <div class="calc-cenarios">
+          <button class="calc-cenario calc-on" id="calcCenTem" type="button">
+            <span class="calc-cenario-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M10 12h4M12 10v4"/></svg></span>
+            <span class="calc-cenario-t">Já tenho um consultório</span>
+            <span class="calc-cenario-d">Quero comparar meus custos atuais com o modelo Sense</span>
+          </button>
+          <button class="calc-cenario" id="calcCenNovo" type="button">
+            <span class="calc-cenario-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/></svg></span>
+            <span class="calc-cenario-t">Quero abrir um consultório</span>
+            <span class="calc-cenario-d">Quero saber quanto custa montar tudo do zero</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="calc-step" data-step="2">
         <p class="calc-step-title">Sobre a sua rotina</p>
         <p class="calc-step-desc">Vamos entender seu volume de atendimento.</p>
         <label class="calc-label">Horas de atendimento por semana</label>
@@ -2054,25 +2106,25 @@ footer {
         </div>
       </div>
 
-      <div class="calc-step" data-step="2">
-        <p class="calc-step-title">Infraestrutura</p>
-        <p class="calc-step-desc">O que faz (ou faria) parte da estrutura física do seu consultório?</p>
+      <div class="calc-step" data-step="3">
+        <p class="calc-step-title" id="calcInfraTitulo">Infraestrutura</p>
+        <p class="calc-step-desc" id="calcInfraDesc">O que faz parte da estrutura física do seu consultório?</p>
         <div id="calcListInfra"></div>
       </div>
 
-      <div class="calc-step" data-step="3">
+      <div class="calc-step" data-step="4">
         <p class="calc-step-title">Serviços básicos</p>
         <p class="calc-step-desc">O dia a dia que mantém o consultório funcionando.</p>
         <div id="calcListBasicos"></div>
       </div>
 
-      <div class="calc-step" data-step="4">
+      <div class="calc-step" data-step="5">
         <p class="calc-step-title">Serviços operacionais e administrativos</p>
         <p class="calc-step-desc">Quem cuida da operação enquanto você atende?</p>
         <div id="calcListOper"></div>
       </div>
 
-      <div class="calc-step" data-step="5">
+      <div class="calc-step" data-step="6">
         <p class="calc-step-title">Seu tempo</p>
         <p class="calc-step-desc">Quanto tempo você gasta por semana fora do atendimento?</p>
         <label class="calc-label">Gestão de funcionários</label>
@@ -2100,7 +2152,9 @@ footer {
           <p class="calc-card-label">Consultório tradicional</p>
           <p class="calc-card-note" id="calcTradNote"></p>
           <p class="calc-card-value" id="calcTradTotal"></p>
+          <p class="calc-card-annual" id="calcTradAnual"></p>
           <div id="calcTradLines"></div>
+          <div class="calc-invest" id="calcTradInvest" style="display:none"></div>
           <div class="calc-oport" id="calcTradOport"></div>
           <div class="calc-hora"><span>Custo por hora atendida</span><span id="calcTradHora"></span></div>
         </div>
@@ -2108,7 +2162,9 @@ footer {
           <p class="calc-card-label">Consultório profissional · com a Sense</p>
           <p class="calc-card-note" id="calcSenseNote"></p>
           <p class="calc-card-value" id="calcSenseTotal"></p>
+          <p class="calc-card-annual" id="calcSenseAnual"></p>
           <div id="calcSenseLines"></div>
+          <div class="calc-invest" id="calcSenseInvest" style="display:none"></div>
           <div class="calc-oport" id="calcSenseOport"></div>
           <div class="calc-hora"><span>Custo por hora atendida</span><span id="calcSenseHora"></span></div>
         </div>
@@ -2117,6 +2173,7 @@ footer {
         <div>
           <div style="font-size:14px;font-weight:600;opacity:.85">Sua economia estimada</div>
           <div class="calc-savings-big" id="calcEconomia"></div>
+          <div class="calc-savings-sub" id="calcEconomiaAno"></div>
         </div>
         <a href="#cadastro" class="calc-savings-cta">Quero conhecer a Sense →</a>
       </div>
@@ -2133,8 +2190,25 @@ footer {
       {id:"aluguel", nome:"Aluguel", valor:2500, obrig:true},
       {id:"iptu", nome:"IPTU", valor:190, obrig:true},
       {id:"alvara", nome:"Alvará e documentação", valor:190, obrig:true},
-      {id:"mobilia", nome:"Mobília (mesa, cadeiras, maca, ar-condicionado)", valor:830, nota:"12x"},
-      {id:"estac", nome:"Estacionamento", valor:100}
+      {id:"estac", nome:"Estacionamento", valor:100},
+      /* mobília: só no cenário "quero abrir" — custo único, não mensal */
+      {id:"mob_cons", nome:"Mobília consultório básico", soNovo:true, unico:true, subitens:[
+        {id:"mc_cadeira", nome:"Cadeira profissional", valor:900},
+        {id:"mc_pacientes", nome:"Cadeira de paciente (2)", valor:800},
+        {id:"mc_mesa", nome:"Mesa", valor:1400},
+        {id:"mc_maca", nome:"Maca", valor:1600},
+        {id:"mc_ar", nome:"Ar-condicionado", valor:3500},
+        {id:"mc_lixo_inf", nome:"Lixeira de lixo infectante", valor:100},
+        {id:"mc_lixo_ger", nome:"Lixeira de lixo geral", valor:100}
+      ]},
+      {id:"mob_rec", nome:"Mobília recepção básica", soNovo:true, unico:true, subitens:[
+        {id:"mr_pc", nome:"Computador e acessórios secretária", valor:2800},
+        {id:"mr_imp", nome:"Impressora", valor:2000},
+        {id:"mr_cadeira", nome:"Cadeira secretária", valor:600},
+        {id:"mr_sofa", nome:"Sofá recepção", valor:3000},
+        {id:"mr_poltronas", nome:"Poltronas recepção (2)", valor:1200},
+        {id:"mr_ar", nome:"Ar-condicionado", valor:4500}
+      ]}
     ]},
     { titulo:"Serviços básicos", lista:"calcListBasicos", itens:[
       {id:"agua", nome:"Água, energia, wifi e segurança", valor:680},
@@ -2157,9 +2231,9 @@ footer {
     {h:160,basico:4499,completo:4999},{h:200,basico:4699,completo:5499}
   ];
   var ESPECIALIDADES = ["Acupunturista","Alergista e Imunologista","Anestesiologista","Angiologista","Cardiologista","Cirurgião Cardiovascular","Cirurgião da Mão","Cirurgião de Cabeça e Pescoço","Cirurgião do Aparelho Digestivo","Cirurgião Geral","Cirurgião Oncológico","Cirurgião Pediátrico","Cirurgião Plástico","Cirurgião Torácico","Cirurgião Vascular","Clínico Médico (ou Clínico Geral)","Coloproctologista","Dermatologista","Endocrinologista","Endoscopista","Estética Avançada","Gastroenterologista","Geneticista Médico","Geriatra","Ginecologista e Obstetra","Hematologista Hemoterapeuta","Homeopata","Infectologista","Mastologista","Médico Emergencista","Médico de Família e Comunidade","Médico do Trabalho","Médico de Tráfego","Médico do Esporte","Médico Físico e Reabilitador","Médico Intensivista","Médico Legal e Perito Médico","Médico Nuclear","Médico Preventivista e Social","Nefrologista","Neurocirurgião","Neurologista","Nutrólogo","Oftalmologista","Oncologista Clínico","Ortopedista e Traumatologista","Otorrinolaringologista","Patologista","Patologista Clínico/Lab.","Pediatra","Pneumologista","Psiquiatra","Radiologista e Diagnóstico por Imagem","Radioterapeuta","Reumatologista","Urologista","Fisioterapia Ortopédica","Fisioterapia Desportiva","Fisioterapia Neurológica","Fisioterapia Respiratória","Fisioterapia Cardíaca","Fisioterapia Geriátrica","Fisioterapia Pediátrica","Fisioterapia Uroginecológica","Fisioterapia Dermatofuncional","Fisioterapia Reumatológica","Fisioterapia Oncológica","Fisioterapia Preventiva/Ergonômica","Psicologia Clínica","Psicologia Org. e do Trabalho","Psicologia Educacional","Psicologia Infantil","Psicologia do Esporte","Psicologia Jurídica","Psicologia Forense","Psicologia Hospitalar","Neuropsicologia","Psicanálise","Terapia Cognitivo-Comportamental","Psicologia Social","Psicologia do Desenvolvimento","Psicologia Ambiental","Sexologia","Nutrição Clínica","Nutrição Esportiva","Nutrição Funcional","Nutrição Estética","Nutrição Infantil","Nutrição Geriátrica","Nutrição Materna","Nutrição Hospitalar","Nutrição Coletiva","Nutrição Oncológica","Nutrição Comportamental","Fitoterapia","Saúde Pública","Outro"];
-  var STEPS = ["Seus dados","Sua rotina","Infraestrutura","Serviços básicos","Operacional","Seu tempo"];
+  var STEPS = ["Seus dados","Seu momento","Sua rotina","Infraestrutura","Serviços básicos","Operacional","Seu tempo"];
 
-  var step = 0, divide = false;
+  var step = 0, divide = false, novoConsultorio = false, leadEnviado = false;
   function $(id){ return document.getElementById(id); }
   function fmt(v){ return "R$" + Math.round(v).toLocaleString("pt-BR"); }
   function norm(s){ return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase(); }
@@ -2168,15 +2242,49 @@ footer {
     return '<span class="calc-pill'+(i===0?' calc-active':'')+'" data-p="'+i+'">'+(i+1)+'. '+s+'</span>';
   }).join("");
 
+  var CHECK_SVG = '<span class="calc-box"><svg width="13" height="10" viewBox="0 0 13 10" fill="none">'
+    + '<path d="M1 5l3.5 3.5L12 1" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span>';
+
   SECOES.forEach(function(sec){
     var el = $(sec.lista);
     sec.itens.forEach(function(it){
       var div = document.createElement("div");
       div.className = "calc-check" + (it.obrig ? " calc-on calc-locked" : "");
       div.setAttribute("data-id", it.id);
-      div.innerHTML = '<span class="calc-box"><svg width="13" height="10" viewBox="0 0 13 10" fill="none">'
-        + '<path d="M1 5l3.5 3.5L12 1" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span>'
-        + it.nome + (it.obrig ? '<span class="calc-tag">obrigatório</span>' : '');
+      div.innerHTML = CHECK_SVG + it.nome + (it.obrig ? '<span class="calc-tag">obrigatório</span>' : '');
+
+      /* grupo com subitens (mobília) */
+      if(it.subitens){
+        var wrap = document.createElement("div");
+        wrap.className = "calc-group";
+        wrap.setAttribute("data-grupo", it.id);
+        if(it.soNovo) wrap.style.display = "none";
+        wrap.appendChild(div);
+
+        var box = document.createElement("div");
+        box.className = "calc-subitens";
+        box.id = "calcSub_" + it.id;
+        it.subitens.forEach(function(sub){
+          var s = document.createElement("div");
+          s.className = "calc-check calc-on";     /* vem marcado por padrão */
+          s.setAttribute("data-id", sub.id);
+          s.innerHTML = CHECK_SVG + sub.nome;
+          s.addEventListener("click", function(e){
+            e.stopPropagation();
+            s.classList.toggle("calc-on");
+          });
+          box.appendChild(s);
+        });
+        wrap.appendChild(box);
+
+        div.addEventListener("click", function(){
+          div.classList.toggle("calc-on");
+          box.classList.toggle("calc-show", div.classList.contains("calc-on"));
+        });
+        el.appendChild(wrap);
+        return;
+      }
+
       if(!it.obrig){
         div.addEventListener("click", function(){
           div.classList.toggle("calc-on");
@@ -2185,14 +2293,38 @@ footer {
       }
       el.appendChild(div);
       if(it.limpeza){
-        var sub = document.createElement("div");
-        sub.className = "calc-sub-field"; sub.id = "calcLimpezaDias";
-        sub.innerHTML = '<label class="calc-label" style="font-size:14px">Quantos dias por semana?</label>'
+        var campo = document.createElement("div");
+        campo.className = "calc-sub-field"; campo.id = "calcLimpezaDias";
+        campo.innerHTML = '<label class="calc-label" style="font-size:14px">Quantos dias por semana?</label>'
           + '<input type="number" id="calcDiasLimpeza" value="2" min="1" max="7"/>';
-        el.appendChild(sub);
+        el.appendChild(campo);
       }
     });
   });
+
+  /* cenário: já tem consultório x quer abrir */
+  function setCenario(novo){
+    novoConsultorio = novo;
+    $("calcCenNovo").classList.toggle("calc-on", novo);
+    $("calcCenTem").classList.toggle("calc-on", !novo);
+    $("calcInfraTitulo").textContent = novo ? "Infraestrutura de clínica e consultório" : "Infraestrutura";
+    $("calcInfraDesc").textContent = novo
+      ? "O que você vai precisar para montar o consultório."
+      : "O que faz parte da estrutura física do seu consultório?";
+    Array.prototype.forEach.call(document.querySelectorAll("[data-grupo]"), function(g){
+      g.style.display = novo ? "block" : "none";
+      if(!novo){
+        var head = g.querySelector(".calc-check");
+        head.classList.remove("calc-on");
+        g.querySelector(".calc-subitens").classList.remove("calc-show");
+      }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".calc-pill"), function(p){
+      if(+p.getAttribute("data-p") === 3) p.textContent = novo ? "4. Infraestrutura" : "4. Infraestrutura";
+    });
+  }
+  $("calcCenNovo").addEventListener("click", function(){ setCenario(true); });
+  $("calcCenTem").addEventListener("click", function(){ setCenario(false); });
 
   /* autocomplete */
   function filtraEspec(){
@@ -2269,6 +2401,7 @@ footer {
   $("calcNext").addEventListener("click", function(){ nav(1); });
   $("calcBack").addEventListener("click", function(){ nav(-1); });
   $("calcRedo").addEventListener("click", function(){
+    leadEnviado = false;
     step = -1; nav(1);
     $("calcResult").classList.remove("calc-show");
     $("calcWizard").classList.add("calc-show");
@@ -2297,11 +2430,25 @@ footer {
       return el && el.classList.contains("calc-on");
     }
 
-    var total = 0, temAvancado = false, linhas = [];
+    var total = 0, investimento = 0, temAvancado = false, linhas = [], linhasInvest = [];
     SECOES.forEach(function(sec){
-      var sel = sec.itens.filter(function(it){ return on(it.id); });
-      if(!sel.length) return;
-      linhas.push({ secao: sec.titulo, itens: sel.map(function(it){
+      var itensMes = [];
+      sec.itens.forEach(function(it){
+        if(!on(it.id)) return;
+
+        /* grupo de mobília: soma os subitens marcados como investimento único */
+        if(it.subitens){
+          if(!novoConsultorio) return;
+          var subs = it.subitens.filter(function(s){ return on(s.id); });
+          if(!subs.length) return;
+          linhasInvest.push({ secao: it.nome, itens: subs.map(function(s){
+            var v = s.valor / pessoas;
+            investimento += v;
+            return { nome: s.nome, v: v };
+          })});
+          return;
+        }
+
         var v = itemValor(it) / pessoas;
         total += v;
         if(it.avancado) temAvancado = true;
@@ -2309,8 +2456,9 @@ footer {
         if(it.limpeza) nomeSense += " (" + ($("calcDiasLimpeza") ? $("calcDiasLimpeza").value : 2) + "x/semana)";
         var nome = nomeSense;
         if(it.nota) nome += " · " + it.nota;
-        return { nome: nome, nomeSense: nomeSense, v: v };
-      })});
+        itensMes.push({ nome: nome, nomeSense: nomeSense, v: v });
+      });
+      if(itensMes.length) linhas.push({ secao: sec.titulo, itens: itensMes });
     });
 
     var pacote = null;
@@ -2318,33 +2466,61 @@ footer {
     if(!pacote) pacote = SENSEPASS[SENSEPASS.length-1];
     var sensePreco = temAvancado ? pacote.completo : pacote.basico;
 
+    /* anual: 12 meses de custo recorrente + investimento inicial no 1º ano */
+    var tradAnual  = total * 12 + investimento;
+    var oportAnual = custoOport * 12;
+    var senseAnual = sensePreco * 12;
+
     $("calcTradNote").textContent = pessoas > 1 ? "custos divididos entre " + pessoas + " pessoas" : " ";
     $("calcTradTotal").innerHTML = fmt(total) + "<small>/mês</small>";
+    $("calcTradAnual").innerHTML = fmt(tradAnual) + " no primeiro ano"
+      + (investimento > 0 ? " · inclui a montagem" : "");
     $("calcTradLines").innerHTML = linhas.map(function(l){
       return '<p class="calc-res-section">'+l.secao+'</p>' + l.itens.map(function(it){
         return '<div class="calc-res-line"><span>'+it.nome+'</span><b>'+fmt(it.v)+'</b></div>';
       }).join("");
     }).join("");
+    $("calcTradInvest").innerHTML = investimento > 0
+      ? '🛠 Para montar o consultório você investe <b>'+fmt(investimento)+'</b> antes de atender o primeiro paciente.'
+      : "";
+    $("calcTradInvest").style.display = investimento > 0 ? "block" : "none";
     $("calcTradOport").innerHTML = '⏱ <strong>'+Math.round(hrsPerdidas)+'h/mês</strong> gastas com gestão e burocracia. Ao seu valor de hora, isso custa <strong>'+fmt(custoOport)+'/mês</strong> em atendimentos que você deixa de fazer.';
     $("calcTradHora").textContent = fmt((total + custoOport) / hrsMes);
 
     $("calcSenseNote").textContent = "valor estimado para o seu cenário";
     $("calcSenseTotal").innerHTML = fmt(sensePreco) + "<small>/mês</small>";
+    $("calcSenseAnual").innerHTML = fmt(senseAnual) + " no primeiro ano";
     $("calcSenseLines").innerHTML = linhas.map(function(l){
       return '<p class="calc-res-section">'+l.secao+'</p>' + l.itens.map(function(it){
         return '<div class="calc-res-line"><span>'+it.nomeSense+'</span><b>incluso</b></div>';
       }).join("");
     }).join("");
+    $("calcSenseInvest").innerHTML = investimento > 0
+      ? '🛠 Investimento para montar: <b style="color:var(--tomato)">R$0</b> — as salas já vêm equipadas e prontas para atender.'
+      : "";
+    $("calcSenseInvest").style.display = investimento > 0 ? "block" : "none";
     $("calcSenseOport").innerHTML = '⏱ Essas <strong>'+Math.round(hrsPerdidas)+'h/mês voltam para a sua agenda</strong> — até <strong>'+fmt(custoOport)+'/mês</strong> a mais em atendimentos.';
     $("calcSenseHora").textContent = fmt(sensePreco / hrsMes);
 
-    var eco = (total + custoOport) - sensePreco;
+    var eco      = (total + custoOport) - sensePreco;
+    var ecoAnual = (tradAnual + oportAnual) - senseAnual;
     $("calcEconomia").textContent = eco > 0 ? fmt(eco) + "/mês" : "Compare os cenários acima";
+    $("calcEconomiaAno").textContent = ecoAnual > 0 ? fmt(ecoAnual) + " no primeiro ano" : "";
 
-    /* envia o lead + simulação para o Supabase (tabela leads_calculadora) */
+    /* envia o lead + simulação para o Supabase — uma vez por simulação */
+    if(leadEnviado) return;
+    leadEnviado = true;
     var itensSel = [];
-    SECOES.forEach(function(sec){ sec.itens.forEach(function(it){ if(on(it.id)) itensSel.push(it.id); }); });
+    SECOES.forEach(function(sec){ sec.itens.forEach(function(it){
+      if(on(it.id)) itensSel.push(it.id);
+      if(it.subitens) it.subitens.forEach(function(s){ if(on(s.id)) itensSel.push(s.id); });
+    }); });
     var itensDet = linhas.map(function(l){
+      return { secao: l.secao, itens: l.itens.map(function(it){
+        return { nome: it.nome, valor: Math.round(it.v) };
+      })};
+    });
+    var investDet = linhasInvest.map(function(l){
       return { secao: l.secao, itens: l.itens.map(function(it){
         return { nome: it.nome, valor: Math.round(it.v) };
       })};
@@ -2367,6 +2543,13 @@ footer {
         num_pessoas: pessoas,
         itens_selecionados: itensSel,
         itens_detalhados: itensDet,
+        cenario: novoConsultorio ? "novo" : "existente",
+        investimento_inicial: Math.round(investimento),
+        investimento_detalhado: investDet,
+        custo_tradicional_anual: Math.round(tradAnual),
+        custo_oportunidade_anual: Math.round(oportAnual),
+        preco_sense_anual: Math.round(senseAnual),
+        economia_anual: Math.round(ecoAnual),
         hrs_gestao_semana: +$("calcHrsGestao").value,
         hrs_admin_semana: +$("calcHrsAdmin").value,
         custo_tradicional: Math.round(total),

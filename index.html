@@ -1765,91 +1765,500 @@ footer {
   </div>
 </section>
 
-<!-- ─── COMPARISON TABLE ─────────────────────────────────── -->
-<section class="compare-section" id="como-funciona-steps">
-  <div class="container">
-    <div class="compare-header reveal">
-      <span class="section-eyebrow">Pode Comparar</span>
-      <h2 class="section-title">Atender na Sense faz muito<br/>mais <em style="font-style:italic;color:var(--tomato)">"sentido"</em></h2>
+<!-- ─── CALCULADORA DE CUSTOS ────────────────────────────── -->
+<style>
+.calc-section { padding: 120px 0; background: var(--white); }
+.calc-wrap { text-align: center; }
+
+/* capa */
+.calc-capa { max-width: 760px; margin: 0 auto; background: var(--gunmetal);
+  border-radius: 28px; padding: 72px 40px; color: #fff; }
+.calc-capa.calc-hide { display: none; }
+.calc-capa-badge { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--tomato); background:rgba(224,98,83,.15);
+  padding:7px 16px; border-radius:30px; margin-bottom:22px; }
+.calc-capa-title { font-size:clamp(28px,3.5vw,44px); font-weight:800; line-height:1.15;
+  letter-spacing:-1.5px; margin-bottom:16px; color:#fff; }
+.calc-capa-title em { color:var(--tomato); font-style:normal; }
+.calc-capa-sub { font-size:17px; line-height:1.65; opacity:.75; max-width:520px; margin:0 auto 34px; }
+.calc-capa-stats { display:flex; justify-content:center; gap:36px; margin-bottom:38px; flex-wrap:wrap; }
+.calc-stat b { display:block; font-size:24px; font-weight:800; color:var(--tomato); }
+.calc-stat span { font-size:13px; opacity:.65; }
+
+/* header pós-capa */
+.calc-header { display:none; margin-bottom:36px; }
+.calc-header.calc-show { display:block; }
+
+/* progresso */
+.calc-steps { display:none; gap:8px; margin:0 auto 26px; flex-wrap:wrap; justify-content:center; }
+.calc-steps.calc-show { display:flex; }
+.calc-pill { font-size:12px; font-weight:700; padding:7px 14px; border-radius:30px;
+  background:rgba(6,37,51,.06); opacity:.5; }
+.calc-pill.calc-active { background:var(--tomato); color:#fff; opacity:1; }
+.calc-pill.calc-done { background:rgba(224,98,83,.15); color:var(--tomato); opacity:1; }
+
+/* wizard */
+.calc-wizard { display:none; background:#F4F6F8; border-radius:24px; padding:40px 36px;
+  max-width:620px; margin:0 auto; text-align:left; }
+.calc-wizard.calc-show { display:block; }
+.calc-step { display:none; }
+.calc-step.calc-show { display:block; animation:calcFade .25s ease; }
+@keyframes calcFade { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+.calc-step-title { font-size:21px; font-weight:800; letter-spacing:-.5px; margin-bottom:6px; color:var(--gunmetal); }
+.calc-step-desc { font-size:14px; opacity:.6; margin-bottom:24px; }
+
+.calc-label { font-weight:700; font-size:15px; display:block; margin-bottom:10px; color:var(--gunmetal); }
+.calc-hint { font-weight:400; opacity:.55; font-size:13px; }
+.calc-input { width:100%; padding:14px 16px; border:2px solid rgba(6,37,51,.12); border-radius:12px;
+  font-size:16px; font-weight:600; background:#fff; color:var(--gunmetal); margin-bottom:20px; }
+.calc-input.calc-num { font-weight:700; font-size:17px; }
+.calc-input:focus { outline:none; border-color:var(--tomato); }
+.calc-prefix { position:relative; }
+.calc-prefix > span { position:absolute; left:16px; top:15px; font-weight:700; opacity:.5; font-size:17px; }
+.calc-prefix input { padding-left:44px; }
+
+/* autocomplete */
+.calc-combo { position:relative; }
+.calc-combo-list { display:none; position:absolute; top:calc(100% - 16px); left:0; right:0; z-index:20;
+  background:#fff; border:2px solid rgba(6,37,51,.12); border-radius:12px;
+  max-height:220px; overflow-y:auto; box-shadow:0 10px 30px rgba(6,37,51,.12); text-align:left; }
+.calc-combo-list.calc-show { display:block; }
+.calc-opt { padding:11px 16px; font-size:15px; cursor:pointer; }
+.calc-opt:hover { background:rgba(224,98,83,.1); color:var(--tomato); font-weight:600; }
+.calc-empty { padding:11px 16px; font-size:14px; opacity:.5; }
+
+.calc-toggle-row { display:flex; gap:10px; margin-bottom:20px; }
+.calc-toggle { flex:1; padding:13px; border-radius:12px; border:2px solid rgba(6,37,51,.12);
+  background:#fff; font-weight:700; font-size:15px; cursor:pointer; color:var(--gunmetal); transition:.15s; }
+.calc-toggle.calc-on { border-color:var(--tomato); background:var(--tomato); color:#fff; }
+
+/* checklist */
+.calc-check { display:flex; align-items:center; gap:12px; padding:13px 16px; border-radius:12px;
+  background:#fff; margin-bottom:8px; cursor:pointer; border:2px solid transparent;
+  transition:.15s; font-size:15px; }
+.calc-check:hover { border-color:rgba(224,98,83,.35); }
+.calc-check.calc-locked { opacity:.8; cursor:default; }
+.calc-check.calc-locked:hover { border-color:transparent; }
+.calc-box { width:22px; height:22px; border-radius:6px; border:2px solid rgba(6,37,51,.25);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:.15s; }
+.calc-check.calc-on .calc-box { background:var(--tomato); border-color:var(--tomato); }
+.calc-box svg { opacity:0; }
+.calc-check.calc-on .calc-box svg { opacity:1; }
+.calc-tag { font-size:11px; font-weight:700; color:var(--tomato); background:rgba(224,98,83,.12);
+  padding:2px 8px; border-radius:20px; margin-left:auto; }
+.calc-sub-field { margin:4px 0 14px 34px; display:none; }
+.calc-sub-field.calc-show { display:block; }
+.calc-sub-field input { width:110px; padding:9px 12px; border:2px solid rgba(6,37,51,.12);
+  border-radius:10px; font-weight:700; font-size:15px; }
+
+.calc-slider-row { display:flex; align-items:center; gap:14px; margin-bottom:22px; }
+.calc-slider-row input[type=range] { flex:1; accent-color:var(--tomato); }
+.calc-slider-val { font-weight:800; min-width:56px; text-align:right; color:var(--gunmetal); }
+
+.calc-nav { display:flex; justify-content:space-between; margin-top:28px; }
+.calc-btn { border:none; border-radius:50px; padding:16px 32px; font-weight:700; font-size:15px;
+  cursor:pointer; transition:all .2s; font-family:inherit; }
+.calc-btn-primary { background:var(--tomato); color:#fff; }
+.calc-btn-primary:hover { background:var(--tomato-dark); transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(224,98,83,.35); }
+.calc-btn-back { background:transparent; color:var(--gunmetal); opacity:.55; }
+
+/* resultado */
+.calc-result { display:none; }
+.calc-result.calc-show { display:block; animation:calcFade .3s ease; }
+.calc-res-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:900px;
+  margin:0 auto; text-align:left; }
+@media (max-width:768px) { .calc-res-grid { grid-template-columns:1fr; } }
+.calc-card { border-radius:24px; padding:32px 28px; }
+.calc-card-trad { background:#F4F6F8; }
+.calc-card-sense { background:var(--gunmetal); color:#fff; border:2px solid var(--tomato); }
+.calc-card-label { font-size:14px; font-weight:700; margin-bottom:8px; }
+.calc-card-sense .calc-card-label { color:var(--tomato); }
+.calc-card-note { font-size:13px; opacity:.6; margin-bottom:4px; min-height:1em; }
+.calc-card-value { font-size:clamp(30px,3.5vw,42px); font-weight:800; letter-spacing:-1.5px; margin-bottom:18px; }
+.calc-card-value small { font-size:16px; font-weight:600; opacity:.6; letter-spacing:0; }
+.calc-res-section { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em;
+  opacity:.5; margin:14px 0 4px; }
+.calc-res-line { display:flex; justify-content:space-between; gap:12px; font-size:14px; padding:6px 0;
+  border-bottom:1px solid rgba(6,37,51,.07); }
+.calc-card-sense .calc-res-line { border-bottom:1px solid rgba(255,255,255,.08); }
+.calc-res-line b { font-weight:700; white-space:nowrap; }
+.calc-card-sense .calc-res-line b { color:var(--tomato); }
+.calc-oport { margin-top:16px; padding:14px; border-radius:14px; background:rgba(224,98,83,.12);
+  font-size:14px; line-height:1.5; }
+.calc-oport strong { color:var(--tomato); }
+.calc-hora { margin-top:16px; padding-top:14px; border-top:2px solid rgba(6,37,51,.15);
+  display:flex; justify-content:space-between; font-size:15px; font-weight:800; }
+.calc-card-sense .calc-hora { border-top:2px solid rgba(255,255,255,.2); }
+.calc-hora span:last-child { color:var(--tomato); }
+
+.calc-savings { margin:20px auto 0; max-width:900px; background:var(--tomato); color:#fff;
+  border-radius:18px; padding:22px 28px; display:flex; align-items:center;
+  justify-content:space-between; flex-wrap:wrap; gap:12px; text-align:left; }
+.calc-savings-big { font-size:26px; font-weight:800; letter-spacing:-1px; }
+.calc-savings-cta { background:var(--gunmetal); color:#fff; font-weight:700;
+  padding:14px 28px; border-radius:50px; font-size:15px; }
+.calc-redo { margin-top:14px; background:none; border:none; color:var(--gunmetal); opacity:.5;
+  font-weight:700; cursor:pointer; font-size:14px; text-decoration:underline; font-family:inherit; }
+</style>
+
+<section class="calc-section" id="calculadora">
+  <div class="container calc-wrap">
+
+    <!-- CAPA -->
+    <div class="calc-capa reveal" id="calcCapa">
+      <span class="calc-capa-badge">Calculadora Sense</span>
+      <h2 class="calc-capa-title">Quanto custa de verdade<br/>o seu <em>consultório?</em></h2>
+      <p class="calc-capa-sub">Em 1 minuto, monte o cenário do seu consultório, descubra o custo real por hora atendida e compare com o modelo Sense.</p>
+      <div class="calc-capa-stats">
+        <div class="calc-stat"><b>1 min</b><span>para simular</span></div>
+        <div class="calc-stat"><b>13 custos</b><span>mapeados</span></div>
+        <div class="calc-stat"><b>R$/hora</b><span>comparado</span></div>
+      </div>
+      <button class="calc-btn calc-btn-primary" id="calcStart">Iniciar simulação →</button>
     </div>
 
-    <div class="compare-table reveal">
-      <!-- Header row -->
-      <div class="compare-row compare-row-head">
-        <div class="compare-col-label">Despesas</div>
-        <div class="compare-col-trad">
-          <span class="compare-col-trad-label">Consultório<br/>Tradicional</span>
+    <!-- HEADER -->
+    <div class="calc-header" id="calcHeader">
+      <span class="section-eyebrow">Calculadora Sense</span>
+      <h2 class="section-title">Faça as contas: a Sense faz muito mais <em style="font-style:italic;color:var(--tomato)">"sentido"</em></h2>
+    </div>
+
+    <div class="calc-steps" id="calcSteps"></div>
+
+    <!-- WIZARD -->
+    <div class="calc-wizard" id="calcWizard">
+      <div class="calc-step calc-show" data-step="0">
+        <p class="calc-step-title">Antes de começar</p>
+        <p class="calc-step-desc">Seus dados para enviarmos a simulação completa.</p>
+        <label class="calc-label">Nome</label>
+        <input class="calc-input" type="text" id="calcNome" placeholder="Seu nome completo"/>
+        <label class="calc-label">Especialidade</label>
+        <div class="calc-combo">
+          <input class="calc-input" type="text" id="calcEspec" placeholder="Digite para buscar…" autocomplete="off"/>
+          <div class="calc-combo-list" id="calcEspecList"></div>
         </div>
-        <div class="compare-col-sense">
-          <span class="compare-sense-logo">sense</span>
-          <span class="compare-sense-sub">smart clinic</span>
+        <label class="calc-label">Telefone (WhatsApp)</label>
+        <input class="calc-input" type="tel" id="calcTel" placeholder="(34) 9 9999-9999"/>
+        <label class="calc-label">E-mail</label>
+        <input class="calc-input" type="email" id="calcEmail" placeholder="voce@email.com"/>
+      </div>
+
+      <div class="calc-step" data-step="1">
+        <p class="calc-step-title">Sobre a sua rotina</p>
+        <p class="calc-step-desc">Vamos entender seu volume de atendimento.</p>
+        <label class="calc-label">Horas de atendimento por semana</label>
+        <input class="calc-input calc-num" type="number" id="calcHrs" value="20" min="1" max="60"/>
+        <label class="calc-label">Valor médio de 1 hora de atendimento</label>
+        <div class="calc-prefix"><span>R$</span>
+          <input class="calc-input calc-num" type="number" id="calcValorHora" value="300" min="0"/>
+        </div>
+        <label class="calc-label">Divide o consultório com alguém?</label>
+        <div class="calc-toggle-row">
+          <button class="calc-toggle calc-on" id="calcDivNao" type="button">Não</button>
+          <button class="calc-toggle" id="calcDivSim" type="button">Sim</button>
+        </div>
+        <div id="calcDivCampo" style="display:none">
+          <label class="calc-label">Com quantas pessoas? <span class="calc-hint">· incluindo você</span></label>
+          <input class="calc-input calc-num" type="number" id="calcPessoas" value="2" min="2" max="10"/>
         </div>
       </div>
 
-      <!-- Rows -->
-      <div class="compare-row">
-        <div class="compare-col-label"><span class="compare-check">✓</span> Aluguel</div>
-        <div class="compare-col-trad compare-val-trad">R$2.000,00</div>
-        <div class="compare-col-sense compare-val-sense">—</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-col-label"><span class="compare-check">✓</span> Secretária e Encargos</div>
-        <div class="compare-col-trad compare-val-trad">R$2.500,00</div>
-        <div class="compare-col-sense compare-val-sense">—</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-col-label"><span class="compare-check">✓</span> Limpeza e manutenção</div>
-        <div class="compare-col-trad compare-val-trad">R$1.200,00</div>
-        <div class="compare-col-sense compare-val-sense">—</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-col-label"><span class="compare-check">✓</span> Sistema de gestão</div>
-        <div class="compare-col-trad compare-val-trad">R$150,00</div>
-        <div class="compare-col-sense compare-val-sense">—</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-col-label"><span class="compare-check">✓</span> Estacionamento</div>
-        <div class="compare-col-trad compare-val-trad">R$100,00</div>
-        <div class="compare-col-sense compare-val-sense">—</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-col-label"><span class="compare-check">✓</span> Contas básicas (luz, água e wifi)</div>
-        <div class="compare-col-trad compare-val-trad">R$470,00</div>
-        <div class="compare-col-sense compare-val-sense">—</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-col-label"><span class="compare-check">✓</span> Segurança e Monitoramento</div>
-        <div class="compare-col-trad compare-val-trad">R$150,00</div>
-        <div class="compare-col-sense compare-val-sense">—</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-col-label"><span class="compare-check">✓</span> Marketing</div>
-        <div class="compare-col-trad compare-val-trad">R$600,00</div>
-        <div class="compare-col-sense compare-val-sense">—</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-col-label"><span class="compare-check">✓</span> Documentação e Impostos</div>
-        <div class="compare-col-trad compare-val-trad">R$600,00</div>
-        <div class="compare-col-sense compare-val-sense">—</div>
-      </div>
-      <div class="compare-row compare-row-highlight">
-        <div class="compare-col-label"><span class="compare-check">✓</span> <span class="compare-strike">Tempo Livre</span></div>
-        <div class="compare-col-trad compare-val-trad">R$??????</div>
-        <div class="compare-col-sense compare-val-sense">—</div>
+      <div class="calc-step" data-step="2">
+        <p class="calc-step-title">Infraestrutura</p>
+        <p class="calc-step-desc">O que faz (ou faria) parte da estrutura física do seu consultório?</p>
+        <div id="calcListInfra"></div>
       </div>
 
-      <!-- Total row -->
-      <div class="compare-row compare-row-total">
-        <div class="compare-col-label">Valor Total</div>
-        <div class="compare-col-trad compare-val-total-trad">R$7.288,00</div>
-        <div class="compare-col-sense compare-val-total-sense">
-          <span class="compare-total-price">R$4.990</span>
-          <span class="compare-total-sub">ou até R$30/hora</span>
+      <div class="calc-step" data-step="3">
+        <p class="calc-step-title">Serviços básicos</p>
+        <p class="calc-step-desc">O dia a dia que mantém o consultório funcionando.</p>
+        <div id="calcListBasicos"></div>
+      </div>
+
+      <div class="calc-step" data-step="4">
+        <p class="calc-step-title">Serviços operacionais e administrativos</p>
+        <p class="calc-step-desc">Quem cuida da operação enquanto você atende?</p>
+        <div id="calcListOper"></div>
+      </div>
+
+      <div class="calc-step" data-step="5">
+        <p class="calc-step-title">Seu tempo</p>
+        <p class="calc-step-desc">Quanto tempo você gasta por semana fora do atendimento?</p>
+        <label class="calc-label">Gestão de funcionários</label>
+        <div class="calc-slider-row">
+          <input type="range" id="calcHrsGestao" min="0" max="20" value="4"/>
+          <span class="calc-slider-val" id="calcHrsGestaoVal">4h</span>
         </div>
+        <label class="calc-label">Questões administrativas <span class="calc-hint">· contador, fiscalização, manutenção predial</span></label>
+        <div class="calc-slider-row">
+          <input type="range" id="calcHrsAdmin" min="0" max="20" value="3"/>
+          <span class="calc-slider-val" id="calcHrsAdminVal">3h</span>
+        </div>
+      </div>
+
+      <div class="calc-nav">
+        <button class="calc-btn calc-btn-back" id="calcBack" type="button" style="visibility:hidden">← Voltar</button>
+        <button class="calc-btn calc-btn-primary" id="calcNext" type="button">Avançar →</button>
       </div>
     </div>
+
+    <!-- RESULTADO -->
+    <div class="calc-result" id="calcResult">
+      <div class="calc-res-grid">
+        <div class="calc-card calc-card-trad">
+          <p class="calc-card-label">Consultório tradicional</p>
+          <p class="calc-card-note" id="calcTradNote"></p>
+          <p class="calc-card-value" id="calcTradTotal"></p>
+          <div id="calcTradLines"></div>
+          <div class="calc-oport" id="calcTradOport"></div>
+          <div class="calc-hora"><span>Custo por hora atendida</span><span id="calcTradHora"></span></div>
+        </div>
+        <div class="calc-card calc-card-sense">
+          <p class="calc-card-label">Consultório profissional · com a Sense</p>
+          <p class="calc-card-note" id="calcSenseNote"></p>
+          <p class="calc-card-value" id="calcSenseTotal"></p>
+          <div id="calcSenseLines"></div>
+          <div class="calc-oport" id="calcSenseOport"></div>
+          <div class="calc-hora"><span>Custo por hora atendida</span><span id="calcSenseHora"></span></div>
+        </div>
+      </div>
+      <div class="calc-savings">
+        <div>
+          <div style="font-size:14px;font-weight:600;opacity:.85">Sua economia estimada</div>
+          <div class="calc-savings-big" id="calcEconomia"></div>
+        </div>
+        <a href="#cadastro" class="calc-savings-cta">Quero conhecer a Sense →</a>
+      </div>
+      <button class="calc-redo" id="calcRedo" type="button">↻ Refazer simulação</button>
+    </div>
+
   </div>
 </section>
+
+<script>
+(function(){
+  var SECOES = [
+    { titulo:"Infraestrutura", lista:"calcListInfra", itens:[
+      {id:"aluguel", nome:"Aluguel", valor:2500, obrig:true},
+      {id:"iptu", nome:"IPTU", valor:190, obrig:true},
+      {id:"alvara", nome:"Alvará e documentação", valor:190, obrig:true},
+      {id:"mobilia", nome:"Mobília (mesa, cadeiras, maca, ar-condicionado)", valor:830, nota:"12x"},
+      {id:"estac", nome:"Estacionamento", valor:100}
+    ]},
+    { titulo:"Serviços básicos", lista:"calcListBasicos", itens:[
+      {id:"agua", nome:"Água, energia, wifi e segurança", valor:680},
+      {id:"limpeza", nome:"Limpeza e material", valor:0, limpeza:true},
+      {id:"material", nome:"Material de consultório (avental, gaze, luvas…)", valor:190},
+      {id:"lixo", nome:"Coleta de lixo intoxicante", valor:180},
+      {id:"manut", nome:"Manutenção", valor:90}
+    ]},
+    { titulo:"Serviços operacionais e administrativos", lista:"calcListOper", itens:[
+      {id:"secretaria", nome:"Secretária", valor:2240, avancado:true},
+      {id:"sistema", nome:"Sistema de agendamento e prontuário", valor:120, avancado:true},
+      {id:"marketing", nome:"Marketing médico", valor:800, avancado:true}
+    ]}
+  ];
+  var LIMPEZA_DIA = 140, SEMANAS_MES = 4.33;
+  var SENSEPASS = [
+    {h:16,basico:959,completo:1350},{h:32,basico:1799,completo:2349},
+    {h:50,basico:2399,completo:2950},{h:64,basico:2759,completo:3360},
+    {h:90,basico:3499,completo:4199},{h:120,basico:3959,completo:4659},
+    {h:160,basico:4499,completo:4999},{h:200,basico:4699,completo:5499}
+  ];
+  var ESPECIALIDADES = ["Acupunturista","Alergista e Imunologista","Anestesiologista","Angiologista","Cardiologista","Cirurgião Cardiovascular","Cirurgião da Mão","Cirurgião de Cabeça e Pescoço","Cirurgião do Aparelho Digestivo","Cirurgião Geral","Cirurgião Oncológico","Cirurgião Pediátrico","Cirurgião Plástico","Cirurgião Torácico","Cirurgião Vascular","Clínico Médico (ou Clínico Geral)","Coloproctologista","Dermatologista","Endocrinologista","Endoscopista","Estética Avançada","Gastroenterologista","Geneticista Médico","Geriatra","Ginecologista e Obstetra","Hematologista Hemoterapeuta","Homeopata","Infectologista","Mastologista","Médico Emergencista","Médico de Família e Comunidade","Médico do Trabalho","Médico de Tráfego","Médico do Esporte","Médico Físico e Reabilitador","Médico Intensivista","Médico Legal e Perito Médico","Médico Nuclear","Médico Preventivista e Social","Nefrologista","Neurocirurgião","Neurologista","Nutrólogo","Oftalmologista","Oncologista Clínico","Ortopedista e Traumatologista","Otorrinolaringologista","Patologista","Patologista Clínico/Lab.","Pediatra","Pneumologista","Psiquiatra","Radiologista e Diagnóstico por Imagem","Radioterapeuta","Reumatologista","Urologista","Fisioterapia Ortopédica","Fisioterapia Desportiva","Fisioterapia Neurológica","Fisioterapia Respiratória","Fisioterapia Cardíaca","Fisioterapia Geriátrica","Fisioterapia Pediátrica","Fisioterapia Uroginecológica","Fisioterapia Dermatofuncional","Fisioterapia Reumatológica","Fisioterapia Oncológica","Fisioterapia Preventiva/Ergonômica","Psicologia Clínica","Psicologia Org. e do Trabalho","Psicologia Educacional","Psicologia Infantil","Psicologia do Esporte","Psicologia Jurídica","Psicologia Forense","Psicologia Hospitalar","Neuropsicologia","Psicanálise","Terapia Cognitivo-Comportamental","Psicologia Social","Psicologia do Desenvolvimento","Psicologia Ambiental","Sexologia","Nutrição Clínica","Nutrição Esportiva","Nutrição Funcional","Nutrição Estética","Nutrição Infantil","Nutrição Geriátrica","Nutrição Materna","Nutrição Hospitalar","Nutrição Coletiva","Nutrição Oncológica","Nutrição Comportamental","Fitoterapia","Saúde Pública","Outro"];
+  var STEPS = ["Seus dados","Sua rotina","Infraestrutura","Serviços básicos","Operacional","Seu tempo"];
+
+  var step = 0, divide = false;
+  function $(id){ return document.getElementById(id); }
+  function fmt(v){ return "R$" + Math.round(v).toLocaleString("pt-BR"); }
+  function norm(s){ return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase(); }
+
+  $("calcSteps").innerHTML = STEPS.map(function(s,i){
+    return '<span class="calc-pill'+(i===0?' calc-active':'')+'" data-p="'+i+'">'+(i+1)+'. '+s+'</span>';
+  }).join("");
+
+  SECOES.forEach(function(sec){
+    var el = $(sec.lista);
+    sec.itens.forEach(function(it){
+      var div = document.createElement("div");
+      div.className = "calc-check" + (it.obrig ? " calc-on calc-locked" : "");
+      div.setAttribute("data-id", it.id);
+      div.innerHTML = '<span class="calc-box"><svg width="13" height="10" viewBox="0 0 13 10" fill="none">'
+        + '<path d="M1 5l3.5 3.5L12 1" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span>'
+        + it.nome + (it.obrig ? '<span class="calc-tag">obrigatório</span>' : '');
+      if(!it.obrig){
+        div.addEventListener("click", function(){
+          div.classList.toggle("calc-on");
+          if(it.limpeza) $("calcLimpezaDias").classList.toggle("calc-show", div.classList.contains("calc-on"));
+        });
+      }
+      el.appendChild(div);
+      if(it.limpeza){
+        var sub = document.createElement("div");
+        sub.className = "calc-sub-field"; sub.id = "calcLimpezaDias";
+        sub.innerHTML = '<label class="calc-label" style="font-size:14px">Quantos dias por semana?</label>'
+          + '<input type="number" id="calcDiasLimpeza" value="2" min="1" max="7"/>';
+        el.appendChild(sub);
+      }
+    });
+  });
+
+  /* autocomplete */
+  function filtraEspec(){
+    var q = norm($("calcEspec").value.trim());
+    var list = $("calcEspecList");
+    var matches = q ? ESPECIALIDADES.filter(function(e){ return norm(e).indexOf(q) !== -1; }) : ESPECIALIDADES;
+    if(matches.length){
+      list.innerHTML = matches.slice(0,60).map(function(e){
+        return '<div class="calc-opt">'+e+'</div>';
+      }).join("");
+    } else {
+      list.innerHTML = '<div class="calc-empty">Nenhuma especialidade encontrada</div><div class="calc-opt">Outro</div>';
+    }
+    Array.prototype.forEach.call(list.querySelectorAll(".calc-opt"), function(o){
+      o.addEventListener("mousedown", function(){
+        $("calcEspec").value = o.textContent;
+        list.classList.remove("calc-show");
+      });
+    });
+    list.classList.add("calc-show");
+  }
+  $("calcEspec").addEventListener("input", filtraEspec);
+  $("calcEspec").addEventListener("focus", filtraEspec);
+  $("calcEspec").addEventListener("blur", function(){
+    setTimeout(function(){ $("calcEspecList").classList.remove("calc-show"); }, 150);
+  });
+
+  /* sliders */
+  $("calcHrsGestao").addEventListener("input", function(){ $("calcHrsGestaoVal").textContent = this.value + "h"; });
+  $("calcHrsAdmin").addEventListener("input", function(){ $("calcHrsAdminVal").textContent = this.value + "h"; });
+
+  /* divide */
+  function setDivide(v){
+    divide = v;
+    $("calcDivSim").classList.toggle("calc-on", v);
+    $("calcDivNao").classList.toggle("calc-on", !v);
+    $("calcDivCampo").style.display = v ? "block" : "none";
+  }
+  $("calcDivSim").addEventListener("click", function(){ setDivide(true); });
+  $("calcDivNao").addEventListener("click", function(){ setDivide(false); });
+
+  /* fluxo */
+  $("calcStart").addEventListener("click", function(){
+    $("calcCapa").classList.add("calc-hide");
+    $("calcHeader").classList.add("calc-show");
+    $("calcSteps").classList.add("calc-show");
+    $("calcWizard").classList.add("calc-show");
+    $("calcWizard").scrollIntoView({behavior:"smooth", block:"center"});
+  });
+
+  function validaLead(){
+    var ids = ["calcNome","calcEspec","calcTel","calcEmail"];
+    for(var i=0;i<ids.length;i++){
+      var el = $(ids[i]);
+      if(!el.value.trim()){ el.focus(); el.style.borderColor = "var(--tomato)"; return false; }
+    }
+    return true;
+  }
+
+  function nav(dir){
+    if(dir > 0 && step === 0 && !validaLead()) return;
+    step += dir;
+    if(step >= STEPS.length){ mostraResultado(); return; }
+    Array.prototype.forEach.call(document.querySelectorAll(".calc-step"), function(s){
+      s.classList.toggle("calc-show", +s.getAttribute("data-step") === step);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".calc-pill"), function(p){
+      p.classList.toggle("calc-active", +p.getAttribute("data-p") === step);
+      p.classList.toggle("calc-done", +p.getAttribute("data-p") < step);
+    });
+    $("calcBack").style.visibility = step === 0 ? "hidden" : "visible";
+    $("calcNext").textContent = step === STEPS.length-1 ? "Ver resultado →" : "Avançar →";
+  }
+  $("calcNext").addEventListener("click", function(){ nav(1); });
+  $("calcBack").addEventListener("click", function(){ nav(-1); });
+  $("calcRedo").addEventListener("click", function(){
+    step = -1; nav(1);
+    $("calcResult").classList.remove("calc-show");
+    $("calcWizard").classList.add("calc-show");
+    $("calcSteps").classList.add("calc-show");
+    $("calcWizard").scrollIntoView({behavior:"smooth", block:"center"});
+  });
+
+  function itemValor(it){
+    if(it.limpeza){
+      var dias = +($("calcDiasLimpeza") ? $("calcDiasLimpeza").value : 2);
+      return dias * LIMPEZA_DIA * SEMANAS_MES;
+    }
+    return it.valor;
+  }
+
+  function mostraResultado(){
+    var hrsSem = Math.max(1, +$("calcHrs").value);
+    var hrsMes = hrsSem * SEMANAS_MES;
+    var valHora = +$("calcValorHora").value || 0;
+    var pessoas = divide ? Math.max(2, +$("calcPessoas").value) : 1;
+    var hrsPerdidas = (+$("calcHrsGestao").value + +$("calcHrsAdmin").value) * SEMANAS_MES;
+    var custoOport = hrsPerdidas * valHora;
+
+    function on(id){
+      var el = document.querySelector('.calc-check[data-id="'+id+'"]');
+      return el && el.classList.contains("calc-on");
+    }
+
+    var total = 0, temAvancado = false, linhas = [];
+    SECOES.forEach(function(sec){
+      var sel = sec.itens.filter(function(it){ return on(it.id); });
+      if(!sel.length) return;
+      linhas.push({ secao: sec.titulo, itens: sel.map(function(it){
+        var v = itemValor(it) / pessoas;
+        total += v;
+        if(it.avancado) temAvancado = true;
+        var nomeSense = it.nome;
+        if(it.limpeza) nomeSense += " (" + ($("calcDiasLimpeza") ? $("calcDiasLimpeza").value : 2) + "x/semana)";
+        var nome = nomeSense;
+        if(it.nota) nome += " · " + it.nota;
+        return { nome: nome, nomeSense: nomeSense, v: v };
+      })});
+    });
+
+    var pacote = null;
+    for(var i=0;i<SENSEPASS.length;i++){ if(SENSEPASS[i].h >= hrsMes){ pacote = SENSEPASS[i]; break; } }
+    if(!pacote) pacote = SENSEPASS[SENSEPASS.length-1];
+    var sensePreco = temAvancado ? pacote.completo : pacote.basico;
+
+    $("calcTradNote").textContent = pessoas > 1 ? "custos divididos entre " + pessoas + " pessoas" : " ";
+    $("calcTradTotal").innerHTML = fmt(total) + "<small>/mês</small>";
+    $("calcTradLines").innerHTML = linhas.map(function(l){
+      return '<p class="calc-res-section">'+l.secao+'</p>' + l.itens.map(function(it){
+        return '<div class="calc-res-line"><span>'+it.nome+'</span><b>'+fmt(it.v)+'</b></div>';
+      }).join("");
+    }).join("");
+    $("calcTradOport").innerHTML = '⏱ <strong>'+Math.round(hrsPerdidas)+'h/mês</strong> gastas com gestão e burocracia. Ao seu valor de hora, isso custa <strong>'+fmt(custoOport)+'/mês</strong> em atendimentos que você deixa de fazer.';
+    $("calcTradHora").textContent = fmt((total + custoOport) / hrsMes);
+
+    $("calcSenseNote").textContent = "valor estimado para o seu cenário";
+    $("calcSenseTotal").innerHTML = fmt(sensePreco) + "<small>/mês</small>";
+    $("calcSenseLines").innerHTML = linhas.map(function(l){
+      return '<p class="calc-res-section">'+l.secao+'</p>' + l.itens.map(function(it){
+        return '<div class="calc-res-line"><span>'+it.nomeSense+'</span><b>incluso</b></div>';
+      }).join("");
+    }).join("");
+    $("calcSenseOport").innerHTML = '⏱ Essas <strong>'+Math.round(hrsPerdidas)+'h/mês voltam para a sua agenda</strong> — até <strong>'+fmt(custoOport)+'/mês</strong> a mais em atendimentos.';
+    $("calcSenseHora").textContent = fmt(sensePreco / hrsMes);
+
+    var eco = (total + custoOport) - sensePreco;
+    $("calcEconomia").textContent = eco > 0 ? fmt(eco) + "/mês" : "Compare os cenários acima";
+
+    $("calcWizard").classList.remove("calc-show");
+    $("calcSteps").classList.remove("calc-show");
+    Array.prototype.forEach.call(document.querySelectorAll(".calc-pill"), function(p){ p.classList.add("calc-done"); });
+    $("calcResult").classList.add("calc-show");
+    $("calcResult").scrollIntoView({behavior:"smooth", block:"center"});
+  }
+})();
+</script>
 
 <!-- ─── SPACES ────────────────────────────────────────────── -->
 <section class="spaces-section" id="espacos">

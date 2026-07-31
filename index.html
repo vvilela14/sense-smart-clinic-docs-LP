@@ -2193,10 +2193,10 @@ footer {
       {id:"estac", nome:"Estacionamento", valor:100},
       /* mobília: só no cenário "quero abrir" — custo único, não mensal */
       {id:"mob_cons", nome:"Mobília consultório básico", soNovo:true, unico:true, subitens:[
-        {id:"mc_cadeira", nome:"Cadeira profissional", valor:900},
+        {id:"mc_cadeira", nome:"Cadeira profissional", valor:1400},
         {id:"mc_pacientes", nome:"Cadeira de paciente (2)", valor:800},
         {id:"mc_mesa", nome:"Mesa", valor:1400},
-        {id:"mc_maca", nome:"Maca", valor:1600},
+        {id:"mc_maca", nome:"Maca", valor:3500},
         {id:"mc_ar", nome:"Ar-condicionado", valor:3500},
         {id:"mc_lixo_inf", nome:"Lixeira de lixo infectante", valor:100},
         {id:"mc_lixo_ger", nome:"Lixeira de lixo geral", valor:100}
@@ -2223,7 +2223,7 @@ footer {
       {id:"marketing", nome:"Marketing médico", valor:800, avancado:true}
     ]}
   ];
-  var LIMPEZA_DIA = 140, SEMANAS_MES = 4.33;
+  var LIMPEZA_DIA = 120, DIAS_MES_POR_SEMANA = 8, SEMANAS_MES = 4.33;
   var SENSEPASS = [
     {h:16,basico:959,completo:1350},{h:32,basico:1799,completo:2349},
     {h:50,basico:2399,completo:2950},{h:64,basico:2759,completo:3360},
@@ -2412,7 +2412,7 @@ footer {
   function itemValor(it){
     if(it.limpeza){
       var dias = +($("calcDiasLimpeza") ? $("calcDiasLimpeza").value : 2);
-      return dias * LIMPEZA_DIA * SEMANAS_MES;
+      return dias * DIAS_MES_POR_SEMANA * LIMPEZA_DIA;
     }
     return it.valor;
   }

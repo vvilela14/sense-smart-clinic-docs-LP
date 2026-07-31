@@ -2228,7 +2228,7 @@ footer {
       /* manutenções periódicas — valor anual diluído no mês */
       {id:"dedetizacao", nome:"Dedetização", valorAno:180},
       {id:"caixa_agua", nome:"Limpeza da caixa d'água", valorAno:300},
-      {id:"filtro", nome:"Limpeza de filtro", valorAno:600},
+      {id:"filtro", nome:"Limpeza de filtro", valorAno:240},
       {id:"limpeza_ar", nome:"Limpeza de ar-condicionado", valorAno:180, porAr:true}
     ]},
     { titulo:"Serviços operacionais e administrativos", lista:"calcListOper", itens:[
@@ -2249,7 +2249,7 @@ footer {
 
   var step = 0, divide = false, novoConsultorio = false, leadEnviado = false;
   function $(id){ return document.getElementById(id); }
-  function fmt(v){ return "R$" + Math.round(v).toLocaleString("pt-BR"); }
+  function fmt(v){ return "R$" + (Math.round(v*100)/100).toLocaleString("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:2}); }
   function norm(s){ return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase(); }
 
   $("calcSteps").innerHTML = STEPS.map(function(s,i){

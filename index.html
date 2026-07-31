@@ -2251,6 +2251,35 @@ footer {
     var eco = (total + custoOport) - sensePreco;
     $("calcEconomia").textContent = eco > 0 ? fmt(eco) + "/mês" : "Compare os cenários acima";
 
+    /* envia o lead + simulação para o Supabase (tabela leads_calculadora) */
+    var itensSel = [];
+    SECOES.forEach(function(sec){ sec.itens.forEach(function(it){ if(on(it.id)) itensSel.push(it.id); }); });
+    fetch("https://lipienluttpbtcbffdhv.supabase.co/rest/v1/leads_calculadora", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": "sb_publishable_ru7Str3saxJTJOmkQJMzCw_P7HZlXVA",
+        "Authorization": "Bearer sb_publishable_ru7Str3saxJTJOmkQJMzCw_P7HZlXVA"
+      },
+      body: JSON.stringify({
+        nome: $("calcNome").value.trim(),
+        especialidade: $("calcEspec").value.trim(),
+        telefone: $("calcTel").value.trim(),
+        email: $("calcEmail").value.trim(),
+        hrs_atendimento_semana: hrsSem,
+        valor_hora: valHora,
+        divide_consultorio: divide,
+        num_pessoas: pessoas,
+        itens_selecionados: itensSel,
+        hrs_gestao_semana: +$("calcHrsGestao").value,
+        hrs_admin_semana: +$("calcHrsAdmin").value,
+        custo_tradicional: Math.round(total),
+        custo_oportunidade: Math.round(custoOport),
+        preco_sense: sensePreco,
+        economia_estimada: Math.round(eco)
+      })
+    }).catch(function(e){ console.warn("lead não enviado:", e); });
+
     $("calcWizard").classList.remove("calc-show");
     $("calcSteps").classList.remove("calc-show");
     Array.prototype.forEach.call(document.querySelectorAll(".calc-pill"), function(p){ p.classList.add("calc-done"); });
